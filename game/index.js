@@ -8,6 +8,7 @@ export const move = (player, position) => {
 
 
 const initialState = { board: Map(), turn: 'O' };
+console.log(initialState)
 
 export default function reducer(state = initialState, action) {
   const newState = Object.assign({}, state);
@@ -17,3 +18,4 @@ export default function reducer(state = initialState, action) {
   }
   return newState;
 }
+
