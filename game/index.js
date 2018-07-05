@@ -1,6 +1,16 @@
 import {Map} from 'immutable'
 
-export default function reducer(state, action) {
-  // TODO
+const MOVE = 'MOVE'
+
+const move = (position, player) => {
+  return {type: MOVE, position: position, player: player}
+}
+
+const initialState = {board: Map()}
+
+export default function reducer(state = initialState, action) {
+  if (action.type === 'MOVE') {
+    return {board: state.board.setIn(action.position, action.player)}
+  }
   return state
 }
