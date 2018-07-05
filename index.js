@@ -27,22 +27,58 @@ const getInput = player => async () => {
   game.dispatch(move(turn, [row, col]))
 }
 
-function streak(board, firstCoord, ...remainCoords){
-  console.log(firstCoord, remainCoords)
+function streak(board, firstCoord, ...remainCoords) {
+  //console.log('COORDS IN STREAK:', firstCoord, remainCoords)
   const newBoard = game.getState().board
-  return remainCoords//? firstCoord : undefined
+  const firstValue = newBoard.getIn(firstCoord)
+
+  for (let i = 0; i < remainCoords.length; i++) {
+    if (!(newBoard.getIn(remainCoords[i]) === firstValue)) {
+      //console.log('IN THE LOOP:', remainCoords[i])
+      return undefined
+    }
+    else if (newBoard.getIn(remainCoords[i]) === firstValue) {
+      //console.log('FIRST VALUE:', firstValue)
+      continue;
+    }
+  }
+  return firstValue;
+  //return remainCoords//? firstCoord : undefined
 
 }
 
 function winner(theBoard) {
   const board = game.getState().board
   let outcome = null
+  const winners = [
+    [[0, 0], [0, 1], [0, 2]]
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]]
+  ]
+  winners.forEach((arr) => {
+    let firstCoord = arr[0]
+    let remainCoords = arr.slice(1)
+    if (streak(board, firstCoord, remainCoords)) {
+      console.log('IF:', streak(board, firstCoord, remainCoords))
+      return streak(board, firstCoord, remainCoords);
+    }
+    else {
+      console.log('ELSE:', null)
+      return null
+    }
+  }
+  )
+
   // let item = thisBoard.getIn([1,1])
 
   // console.log('ITEM:', item)
 
   // let row = board.getIn(1,1)
-  console.log('WINNER:', streak(board, [1,0], [1,1], [1,2]))
   // check the rows
   // console.log('BEFORE CREATING ROW')
   // const row = Map({0: 'X', 1: 'X', 2: 'X'})
@@ -54,8 +90,6 @@ function winner(theBoard) {
 
   //check second diagonal
 
-
-  return outcome
 }
 
 // Create the store - game starts running
