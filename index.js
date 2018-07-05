@@ -1,10 +1,10 @@
 import inquirer from 'inquirer'
 
-import gameReducer, {move} from './game'
-import {createStore} from 'redux'
+import gameReducer, { move } from './game'
+import { createStore } from 'redux'
 
 const printBoard = () => {
-  const {board} = game.getState()
+  const { board } = game.getState()
   for (let r = 0; r != 3; ++r) {
     for (let c = 0; c != 3; ++c) {
       process.stdout.write(board.getIn([r, c], '_'))
@@ -14,14 +14,15 @@ const printBoard = () => {
 }
 
 const getInput = player => async () => {
-  const {turn} = game.getState()  
+  const { turn } = game.getState()
+  //console.log('GET INPUT START', "turn:", turn, "player:", player)
   if (turn !== player) return
   const ans = await inquirer.prompt([{
     type: 'input',
     name: 'coord',
     message: `${turn}'s move (row,col):`
   }])
-  const [row=0, col=0] = ans.coord.split(/[,\s+]/).map(x => +x)
+  const [row = 0, col = 0] = ans.coord.split(/[,\s+]/).map(x => +x)
   game.dispatch(move(turn, [row, col]))
 }
 
@@ -29,7 +30,7 @@ const getInput = player => async () => {
 const game = createStore(gameReducer)
 
 // Debug: Print the state
-// game.subscribe(() => console.log(game.getState()))
+game.subscribe(() => console.log(game.getState()))
 
 game.subscribe(printBoard)
 game.subscribe(getInput('X'))
